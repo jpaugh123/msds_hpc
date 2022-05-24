@@ -8,6 +8,6 @@ spack:
   - targets: [target=broadwell, target=zen2, target=x86_64_v3]
   specs:
   - matrix:
-    - [$%compilers]
+    - [$compilers]
     - [$packages]
     - [$targets]
