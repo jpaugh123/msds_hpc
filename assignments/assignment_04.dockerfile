@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update &&\
- apt-get -y install
+ apt-get -y install curl
 
 COPY assignment_04.sh /usr/bin
 
