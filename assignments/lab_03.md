@@ -19,3 +19,11 @@ I also think there should be some diagrams explaining what you are doing. This c
 I did better in the prior labs because you recorded the scripts for what you were doing. So I could quickly scan that. There were no files at all for this CMake in class exercise – just the videos. 
 
 During the class we just talked briefly – nothing new. 
+
+I tried using the spack.yaml (lab_03.yaml) to get GCC but it is not working I run the spack env create spack.yaml and then do spack find and I dont see GCC... What is the point?
+
+so I used:
+spack install gcc@11.2.0
+Which worked just fine...
+I also wonder - how can we delete a spack environment once we create it?
+How can we update a spack evironment to reflect only what is in a spack.yaml? (alternatively)
