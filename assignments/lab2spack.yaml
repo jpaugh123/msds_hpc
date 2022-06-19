@@ -1,0 +1,23 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+   # add package specs to the `specs` list
+ specs:
+ - python@3.8.12
+ - py-pandas
+ - py-matplotlib
+jpaugh@LAPTOP-AT59DBL1:lab2$ cd spack.yaml
+-bash: cd: spack.yaml: Not a directory
+jpaugh@LAPTOP-AT59DBL1:lab2$ cat spack.yaml
+spack:
+ specs:
+  - python@3.8.12
+  - py-pandas
+  - py-matplotlib
+ container:
+  format: docker
+  images:
+    os: "ubuntu:20.04"
+    spack: develop
