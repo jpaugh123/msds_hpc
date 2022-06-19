@@ -1,0 +1,8 @@
+spack:
+  config:
+   install_missing_compilers: true
+   view: true
+ specs:
+  - gcc@11.2.0
+
+
