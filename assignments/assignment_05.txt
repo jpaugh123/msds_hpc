@@ -1,0 +1,148 @@
+This is where I am so far on 06/22/2022 at 10PM. I need to get some sleep - work meeting tomorrow at 7am.'
+Failinig to load sklearn so I cannot really test xgboost - that's where my test data will come from.
+The load of the xgboost libary is working after some fixes.
+
+I think the problem with loading sklearn is that I am not loading the compiler properly (even though it appears if I check gcc --version). But it is not available to spack (even though I did spack load gcc...). I think it needs to be specificied as a compilter. 
+I am very confuseed though because also I want to do a pip install to load the libary I have built. So where is that going to install the libary exactly? To my active environment or to some shared folder? To try.
+The problem is that gfortran is not available in the spack environment. So when i try to download sklearn via spack, and it's building openblas, it fails. I can see using spack to install openblas itself is failing..
+Need to create a proper spack.yaml and try again
+
+
+# Xgboost help:
+# https://xgboost.readthedocs.io/en/latest/build.html#building-python-package-from-source
+
+#Spack help:
+# https://github.com/spack/spack/issues/10325
+
+# Steps:
+spack env create python3
+spack env activate python3
+
+spack install gcc@11.2.0
+spack load gcc@11.2.0
+
+# get updated fortran
+sudo apt install gfortran-10
+
+# now build. Gfo to the git\xgboost folder and:
+mkdir build
+cd build
+cmake ..
+
+# this should build successfully
+
+spack install python@3:
+spack load python@3:
+
+# The command “python” now works
+# Spack find now shows python3
+
+
+spack install py-pip
+spack load py-pip
+
+spack install openblas
+spack load openblas
+
+spack install py-scikit-learn
+spack load py-scikit-learn
+
+
+
+—---
+
+==> Installing openblas-0.3.18-76zuf67jqwrdltuftcnq7kxp255fxaqy
+==> No binary for openblas-0.3.18-76zuf67jqwrdltuftcnq7kxp255fxaqy found: installing from source
+==> Using cached archive: /home/jpaugh/spack/var/spack/cache/_source-cache/archive/16/1632c1e8cca62d8bed064b37747e331a1796fc46f688626337362bf0d16aeadb.tar.gz
+==> No patches needed for openblas
+==> openblas: Executing phase: 'edit'
+==> Error: InstallError: OpenBLAS requires both C and Fortran compilers!
+
+/home/jpaugh/spack/var/spack/repos/builtin/packages/openblas/package.py:156, in check_compilers:
+        153        # depends on Blas/Lapack need C or/and Fortran symbols. For now
+        154        # require both.
+        155        if self.compiler.fc is None:
+  >>    156            raise InstallError(
+        157                'OpenBLAS requires both C and Fortran compilers!'
+        158            )
+
+See build log for details:
+  /tmp/jpaugh/spack-stage/spack-stage-openblas-0.3.18-76zuf67jqwrdltuftcnq7kxp255fxaqy/spack-build-out.txt
+
+==> Warning: Skipping build of py-numpy-1.21.3-e2ugnsdch6sx6zi52lh4vdu2rda2prmt since openblas-0.3.18-76zuf67jqwrdltuftcnq7kxp255fxaqy failed
+==> Warning: Skipping build of py-pythran-0.9.12-wg6v2s3emjrh7nbazikbljypebcfjmev since py-numpy-1.21.3-e2ugnsdch6sx6zi52lh4vdu2rda2prmt failed
+==> Warning: Skipping build of py-scipy-1.7.1-k46seqwkv4fs7dzhrqtslnatm6x6yo3m since py-pythran-0.9.12-wg6v2s3emjrh7nbazikbljypebcfjmev failed
+==> Warning: Skipping build of py-scikit-learn-1.0.1-bxrypfc77c3zi7u2g6ubr4qgxf44hnfl since py-scipy-1.7.1-k46seqwkv4fs7dzhrqtslnatm6x6yo3m failed
+[+] /home/jpaugh/spack/opt/spack/linux-ubuntu20.04-skylake/gcc-9.4.0/openssl-1.1.1l-3gfa32zpv3xlalpiad5lxwuzrzdkvyq2
+==> Installing cmake-3.21.4-f5no2mskobnvscojkqm66lh4wehsbnvi
+==> No binary for cmake-3.21.4-f5no2mskobnvscojkqm66lh4wehsbnvi found: installing from source
+==> Fetching https://mirror.spack.io/_source-cache/archive/d9/d9570a95c215f4c9886dd0f0564ca4ef8d18c30750f157238ea12669c2985978.tar.gz
+==> No patches needed for cmake
+==> cmake: Executing phase: 'bootstrap'
+==> Error: Exception occurred in writer daemon!
+==> Error: Failed to install cmake due to KeyboardInterrupt:
+Traceback (most recent call last):
+  File "/home/jpaugh/spack/lib/spack/llnl/util/tty/log.py", line 759, in _writer_daemon
+    rlist, _, _ = _retry(select.select)(istreams, [], [], 1e-1)
+  File "/home/jpaugh/spack/lib/spack/llnl/util/tty/log.py", line 861, in wrapped
+    return function(*args, **kwargs)
+KeyboardInterrupt
+—- 
+
+
+[+] /home/jpaugh/spack/opt/spack/linux-ubuntu20.04-skylake/gcc-9.4.0/py-pytest-runner-5.1-pjkjx2nmwezxr4sjjlqgmk7j54y3pe6k
+==> Error: py-scikit-learn-1.0.1-bxrypfc77c3zi7u2g6ubr4qgxf44hnfl: Package was not installed
+==> Updating view at /home/jpaugh/spack/var/spack/environments/python3/.spack-env/view
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) py-gast@0.5.2%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/3ob3qy3
+(Specified) py-gast@0.5.2%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/3ob3qy3
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) util-linux-uuid@2.36.2%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/t6l5u4v
+(Specified) util-linux-uuid@2.36.2%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/t6l5u4v
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) ncurses@6.2%gcc@9.4.0~symlinks+termlib abi=none arch=linux-ubuntu20.04-skylake/vkvafs4
+(Specified) ncurses@6.2%gcc@9.4.0~symlinks+termlib abi=none arch=linux-ubuntu20.04-skylake/vkvafs4
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) bzip2@1.0.8%gcc@9.4.0~debug~pic+shared arch=linux-ubuntu20.04-skylake/exsz2mg
+(Specified) bzip2@1.0.8%gcc@9.4.0~debug~pic+shared arch=linux-ubuntu20.04-skylake/exsz2mg
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) gmp@6.2.1%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/43hi5iq
+(Specified) gmp@6.2.1%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/43hi5iq
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) py-beniget@0.4.1%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/zq3tc24
+(Specified) py-beniget@0.4.1%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/zq3tc24
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) python@3.8.12%gcc@9.4.0+bz2+ctypes+dbm~debug+libxml2+lzma~nis~optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3+ssl~tix~tkinter~ucs4+uuid+zlib patches=0d98e93189bc278fbc37a50ed7f183bd8aaf249a8e1670a465f0db6bb4f8cf87,4c2457325f2b608b1b6a2c63087df8c26e07db3e3d493caf36a56f0ecf6fb768,f2fd060afc4b4618fe8104c4c5d771f36dc55b1db5a4623785a4ea707ec72fb4 arch=linux-ubuntu20.04-skylake/rijfpsm
+(Specified) python@3.8.12%gcc@9.4.0+bz2+ctypes+dbm~debug+libxml2+lzma~nis~optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3+ssl~tix~tkinter~ucs4+uuid+zlib patches=0d98e93189bc278fbc37a50ed7f183bd8aaf249a8e1670a465f0db6bb4f8cf87,4c2457325f2b608b1b6a2c63087df8c26e07db3e3d493caf36a56f0ecf6fb768,f2fd060afc4b4618fe8104c4c5d771f36dc55b1db5a4623785a4ea707ec72fb4 arch=linux-ubuntu20.04-skylake/rijfpsm
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) openssl@1.1.1l%gcc@9.4.0~docs certs=system arch=linux-ubuntu20.04-skylake/3gfa32z
+(Specified) openssl@1.1.1l%gcc@9.4.0~docs certs=system arch=linux-ubuntu20.04-skylake/3gfa32z
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) py-pybind11@2.6.2%gcc@9.4.0~ipo build_type=RelWithDebInfo arch=linux-ubuntu20.04-skylake/zyjhjve
+(Specified) py-pybind11@2.6.2%gcc@9.4.0~ipo build_type=RelWithDebInfo arch=linux-ubuntu20.04-skylake/zyjhjve
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) gcc@11.2.0%gcc@9.4.0~binutils+bootstrap~graphite~nvptx~piclibs~strip languages=c,c++,fortran arch=linux-ubuntu20.04-skylake/m57zwug
+(Specified) gcc@11.2.0%gcc@9.4.0~binutils+bootstrap~graphite~nvptx~piclibs~strip languages=c,c++,fortran arch=linux-ubuntu20.04-skylake/m57zwug
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) mpfr@4.1.0%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/bgogfke
+(Specified) mpfr@4.1.0%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/bgogfke
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) py-setuptools@58.2.0%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/o7a2wtl
+(Specified) py-setuptools@57.4.0%gcc@9.4.0 arch=linux-ubuntu20.04-skylake/z6n4bl7
+==> Error: [/home/jpaugh/spack/var/spack/environments/python3/.spack-env/._view/ai4cj2x4vgrfza4wv7oaw5xwve2gabag] Package conflict detected:
+   (Linked) libxml2@2.9.12%gcc@9.4.0~python arch=linux-ubuntu20.04-skylake/74auza5
+(Specified) libxml2@2.9.12%gcc@9.4.0~python arch=linux-ubuntu20.04-skylake/74auza5
+==> Error: Installation request failed.  Refer to reported errors for failing package(s).
+jpaugh@LAPTOP-AT59DBL1:python-package$ spack install py-scikit-learn^C
+
+
+# Now go to the root for the github folder for xgboost:
+Cd ..
+cd python-package
+pip install -e .
+
+
+
+# run python
+python
+Import xgboost
