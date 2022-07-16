@@ -1,8 +1,13 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
 spack:
+  specs:
+  - python@3.8.12
+  - openblas
+  - py-scikit-learn
+  #concretizer:
+  #  unify: true
   config:
-   install_missing_compilers: true
-   view: true
- specs:
-  - gcc@11.2.0
-
-
+    install_missing_compilers: true
